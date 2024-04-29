@@ -28,7 +28,7 @@ public class CalculatorController : Controller
 
         var result = _calculator.Add(model.Value1, model.Value2);
 
-        var message = $"The result of {model.Value1} + {model.Value2} is {result}.";
+        var message = $"Whoomp! there it is: {model.Value1} + {model.Value2} = {result}";
 
         var newModel = new CalculatorViewModel()
         {
