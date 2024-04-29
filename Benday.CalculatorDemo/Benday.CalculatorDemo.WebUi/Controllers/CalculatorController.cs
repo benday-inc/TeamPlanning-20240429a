@@ -28,11 +28,14 @@ public class CalculatorController : Controller
 
         var result = _calculator.Add(model.Value1, model.Value2);
 
+        var message = $"The result of {model.Value1} + {model.Value2} is {result}.";
+
         var newModel = new CalculatorViewModel()
         {
             Result = result,
             Value1 = model.Value1,
-            Value2 = model.Value2
+            Value2 = model.Value2,
+            ResultMessage = message
         };
 
         ModelState.Clear();

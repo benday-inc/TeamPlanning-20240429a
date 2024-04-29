@@ -12,4 +12,8 @@ public class CalculatorViewModel
 
     [DisplayName("Result")]
     public int Result { get; set; }
+
+    [DisplayName("ResultMessage")]
+    public string ResultMessage { get; set; } = string.Empty;
+
 }
