@@ -9,13 +9,17 @@ env:
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: Benday.CalculatorDemo
+  WEBAPP_WORKING_DIRECTORY: Benday.CalculatorDemo\Benday.CalculatorDemo.WebUi
+  AZURE_WEBAPP_RESOURCE_GROUP: rg-github-demo
+  AZURE_WEBAPP_SLOT_NAME: test
+
 jobs:
   build:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
     - name: what directory?
@@ -30,8 +34,9 @@ jobs:
       run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
     - name: Publish
       run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+      working-directory: ${{ env.WEBAPP_WORKING_DIRECTORY }}
     - name: Publish Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4.3.3
       with:
         name: webapp
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
@@ -41,26 +46,35 @@ jobs:
     environment: test
     steps:
     - name: Download artifact from build job
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4.1.7
       with:
         name: webapp
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
     - name: Deploy to Azure WebApp
-      uses: azure/webapps-deploy@v2
+      uses: azure/webapps-deploy@v3.0.1
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
         publish-profile: ${{ secrets.PUBLISH_PROFILE_TEST }}
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
         slot-name: 'test'
+    - name: Log into Azure CLI with service principal
+      uses: azure/login@v2.1.0
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: set version info
+      run: az webapp config appsettings set -n ${{ env.AZURE_WEBAPP_NAME }} -g ${{ env.AZURE_WEBAPP_RESOURCE_GROUP }} --settings "BuildVersionMessage=${{ github.run_number }}.deploy-to-test"
   deploy-to-prod:
     runs-on: windows-latest
     environment: prod
     needs: deploy-to-test
     steps:
     - name: Log into Azure CLI with service principal
-      uses: azure/login@v1.1
+      uses: azure/login@v2.1.0
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Swap slots
-      run: az webapp deployment slot swap -s ${{ env.SLOT_NAME }} -n ${{ env.WEBAPP_NAME }} -g ${{ env.RESOURCE_GROUP }}
+      run: az webapp deployment slot swap -s ${{ env.AZURE_WEBAPP_SLOT_NAME }} -n ${{ env.AZURE_WEBAPP_NAME }} -g ${{ env.AZURE_WEBAPP_RESOURCE_GROUP }}
+
+    - name: set version info
+      run: az webapp config appsettings set -n ${{ env.AZURE_WEBAPP_NAME }} -g ${{ env.AZURE_WEBAPP_RESOURCE_GROUP }} --settings "BuildVersionMessage=${{ github.run_number }}.deploy-to-prod"
