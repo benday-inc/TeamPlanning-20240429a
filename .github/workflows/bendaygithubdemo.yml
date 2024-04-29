@@ -42,7 +42,7 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     - name: set version info
-      run: az webapp config appsettings set -n ${{ env.AZURE_WEBAPP_NAME }} -g ${{ env.AZURE_WEBAPP_RESOURCE_GROUP }} --settings "BuildVersionMessage=${{ github.run_number }}.deploy-to-test"
+      run: az webapp config appsettings set --slot ${{ env.AZURE_WEBAPP_SLOT_NAME }} -n ${{ env.AZURE_WEBAPP_NAME }} -g ${{ env.AZURE_WEBAPP_RESOURCE_GROUP }} --slot-settings "BuildVersionMessage=${{ github.run_number }}.deploy-to-test"
   deploy-to-prod:
     # runs-on: windows-latest
     runs-on: self-hosted
@@ -58,4 +58,4 @@ jobs:
       run: az webapp deployment slot swap -s ${{ env.AZURE_WEBAPP_SLOT_NAME }} -n ${{ env.AZURE_WEBAPP_NAME }} -g ${{ env.AZURE_WEBAPP_RESOURCE_GROUP }}
 
     - name: set version info
-      run: az webapp config appsettings set -n ${{ env.AZURE_WEBAPP_NAME }} -g ${{ env.AZURE_WEBAPP_RESOURCE_GROUP }} --settings "BuildVersionMessage=${{ github.run_number }}.deploy-to-prod"
+      run: az webapp config appsettings set -n ${{ env.AZURE_WEBAPP_NAME }} -g ${{ env.AZURE_WEBAPP_RESOURCE_GROUP }} --slot-settings "BuildVersionMessage=${{ github.run_number }}.deploy-to-prod"
