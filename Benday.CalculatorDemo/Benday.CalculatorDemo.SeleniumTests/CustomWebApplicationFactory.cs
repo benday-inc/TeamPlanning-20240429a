@@ -11,13 +11,13 @@ public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStar
    where TStartup : class
 {
     private readonly string _baseAddress = "https://localhost";
-    private IWebHost _webHost;
-    private Action<IWebHostBuilder> _addDevelopmentConfigs;
+    private IWebHost? _webHost;
+    private Action<IWebHostBuilder>? _addDevelopmentConfigs;
     private readonly bool _verbose;
 
     public CustomWebApplicationFactory(
         bool verbose = false,
-        Action<IWebHostBuilder> addDevelopmentConfigurations = null)
+        Action<IWebHostBuilder>? addDevelopmentConfigurations = null)
     {
         _verbose = verbose;
 
@@ -47,7 +47,7 @@ public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStar
 
     public string GetServerAddress()
     {
-        var serverAddresses = _webHost.ServerFeatures.Get<IServerAddressesFeature>();
+        var serverAddresses = _webHost?.ServerFeatures.Get<IServerAddressesFeature>();
 
         if (serverAddresses == null)
         {
@@ -73,7 +73,7 @@ public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStar
         return $"{baseAddr}/{url}";
     }
 
-    public TestServer TestServer { get; private set; }
+    public TestServer? TestServer { get; private set; }
 
     protected override TestServer CreateServer(IWebHostBuilder builder)
     {
@@ -125,7 +125,7 @@ public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStar
         return builder;
     }
 
-    protected IServiceScope _scope;
+    protected IServiceScope? _scope;
     protected IServiceScope Scope
     {
         get
@@ -133,7 +133,7 @@ public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStar
             if (_scope == null)
             {
                 var scopeFactory =
-                    TestServer.Services.GetRequiredService<IServiceScopeFactory>();
+                    TestServer?.Services.GetRequiredService<IServiceScopeFactory>();
 
                 if (scopeFactory == null)
                 {
@@ -147,7 +147,7 @@ public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStar
         }
     }
 
-    public T CreateInstance<T>()
+    public T? CreateInstance<T>() where T: notnull
     {
         var provider = Scope.ServiceProvider;
 

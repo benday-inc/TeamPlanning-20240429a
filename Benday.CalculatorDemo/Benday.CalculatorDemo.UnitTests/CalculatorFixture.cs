@@ -86,8 +86,8 @@ public class CalculatorFixture
         Assert.AreEqual<int>(expected, actual, $"Wrong value");
     }
 
-    private string _memberVariable1 = null;
-    private readonly string _memberVariable2;
+    private string? _memberVariable1 = null;
+    private readonly string _memberVariable2 = "hello";
     private readonly string _memberVariable3 = "thingy";
     private readonly string _memberVariable4 = "wheee!";
 

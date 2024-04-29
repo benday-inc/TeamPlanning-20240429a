@@ -6,6 +6,8 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium.Support.Extensions;
+
 
 namespace HelloWorld.SeleniumTests;
 
@@ -30,7 +32,7 @@ public class CalculatorFixture
         _systemUnderTest?.Dispose();
     }
 
-    public TestContext TestContext { get; set; }
+    public required TestContext TestContext { get; set; }
 
     private CustomWebApplicationFactory<Startup>? _systemUnderTest;
     public CustomWebApplicationFactory<Startup> SystemUnderTest
@@ -96,7 +98,7 @@ public class CalculatorFixture
     {
         var screenshot = driver.GetScreenshot();
 
-        var path = Path.Combine(Path.GetTempPath(), "test-attachments", DateTime.Now.Ticks.ToString(), TestContext.TestName);
+        var path = Path.Combine(Path.GetTempPath(), "test-attachments", DateTime.Now.Ticks.ToString(), TestContext.TestName ?? "unknown-test");
 
         if (Directory.Exists(path) == false)
         {
@@ -108,7 +110,7 @@ public class CalculatorFixture
 
         Console.WriteLine($"TakeScreenshot() saving screenshot to: {screenshotPath}");
 
-        screenshot.SaveAsFile(screenshotPath, ScreenshotImageFormat.Png);
+        screenshot.SaveAsFile(screenshotPath);
 
         Assert.IsTrue(File.Exists(screenshotPath), $"Screenshot file not found after save to '{screenshotPath}'.");
 
