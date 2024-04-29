@@ -9,7 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benday.CalculatorDemo.Api",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benday.CalculatorDemo.UnitTests", "Benday.CalculatorDemo.UnitTests\Benday.CalculatorDemo.UnitTests.csproj", "{703FF016-A507-4622-90B7-2F026A158383}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benday.CalculatorDemo.SeleniumTests", "Benday.CalculatorDemo.SeleniumTests\Benday.CalculatorDemo.SeleniumTests.csproj", "{79A96989-A79E-4EAB-9792-6215834953D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benday.CalculatorDemo.SeleniumTests", "Benday.CalculatorDemo.SeleniumTests\Benday.CalculatorDemo.SeleniumTests.csproj", "{79A96989-A79E-4EAB-9792-6215834953D5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EDABE56A-D6A0-43C1-85F4-DB79900CAFA3}"
+	ProjectSection(SolutionItems) = preProject
+		..\.gitignore = ..\.gitignore
+		..\.github\workflows\bendaygithubdemo.yml = ..\.github\workflows\bendaygithubdemo.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
