@@ -21,7 +21,7 @@ jobs:
     - name: what directory?
       run: pwd
     - name: List files
-      run: dir /s
+      run: Get-ChildItem -Recurse
     - name: Restore
       run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
     - name: Build
