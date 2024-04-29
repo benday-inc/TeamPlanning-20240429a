@@ -1,0 +1,45 @@
+name: build calculator demo
+on:
+  workflow_call:
+  
+env:
+  AZURE_WEBAPP_NAME: bendaygithubdemo
+  AZURE_WEBAPP_PACKAGE_PATH: Benday.CalculatorDemo.WebUi/published
+  CONFIGURATION: Release
+  DOTNET_CORE_VERSION: 8.0.x
+  WORKING_DIRECTORY: Benday.CalculatorDemo
+  WEBAPP_WORKING_DIRECTORY: Benday.CalculatorDemo/Benday.CalculatorDemo.WebUi
+  AZURE_WEBAPP_RESOURCE_GROUP: rg-github-demo
+  AZURE_WEBAPP_SLOT_NAME: test
+  UNIT_TESTS_WORKING_DIRECTORY: Benday.CalculatorDemo/Benday.CalculatorDemo.UnitTests
+
+jobs:
+  build:
+    # runs-on: windows-latest
+    runs-on: self-hosted
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+    - name: what directory?
+      run: pwd
+    - name: List files
+      run: ls -lr
+    - name: Restore
+      run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
+    - name: Build
+      run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
+    - name: Test
+      run: dotnet test --no-build
+      working-directory: ${{ env.UNIT_TESTS_WORKING_DIRECTORY }}
+    - name: Publish
+      run: dotnet publish --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ github.workspace }}/published"
+      working-directory: ${{ env.WEBAPP_WORKING_DIRECTORY }}
+    - name: Publish Artifacts
+      uses: actions/upload-artifact@v4.3.3
+      with:
+        name: webapp
+        path: ${{ github.workspace }}/published
+  

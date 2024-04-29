@@ -17,33 +17,8 @@ env:
 
 jobs:
   build:
-    # runs-on: windows-latest
-    runs-on: self-hosted
-    steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
-    - name: what directory?
-      run: pwd
-    - name: List files
-      run: ls -lr
-    - name: Restore
-      run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
-    - name: Build
-      run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
-    - name: Test
-      run: dotnet test --no-build
-      working-directory: ${{ env.UNIT_TESTS_WORKING_DIRECTORY }}
-    - name: Publish
-      run: dotnet publish --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ github.workspace }}/published"
-      working-directory: ${{ env.WEBAPP_WORKING_DIRECTORY }}
-    - name: Publish Artifacts
-      uses: actions/upload-artifact@v4.3.3
-      with:
-        name: webapp
-        path: ${{ github.workspace }}/published
+    uses: ./build.yml
+
   deploy-to-test:
     # runs-on: windows-latest
     runs-on: self-hosted
