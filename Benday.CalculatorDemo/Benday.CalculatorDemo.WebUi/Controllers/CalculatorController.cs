@@ -18,6 +18,11 @@ public class CalculatorController : Controller
         return View(new CalculatorViewModel());
     }
 
+    public IActionResult Reset()
+    {
+        return RedirectToAction("Index");
+    }
+
     [HttpPost]
     public IActionResult Index(CalculatorViewModel model)
     {
