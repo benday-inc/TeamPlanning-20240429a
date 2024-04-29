@@ -53,25 +53,12 @@ jobs:
         slot-name: 'test'
   deploy-to-prod:
     runs-on: windows-latest
-    needs: build
+    needs: deploy-to-test
     steps:
-    - name: Download artifact from build job
-      uses: actions/download-artifact@v3
+    - name: Log into Azure CLI with service principal
+      uses: azure/login@v1.1
       with:
-        name: webapp
-        path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-    
-    - name: Deploy to Azure WebApp
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.bendaygithubdemo_FB35 }}
-        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-        slot-name: 'production'
-    - name: Deploy to Azure WebApp
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.bendaygithubdemo_FB35 }}
-        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-        slot-name: 'test'
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Swap slots
+      run: az webapp deployment slot swap -s ${{ env.SLOT_NAME }} -n ${{ env.WEBAPP_NAME }} -g ${{ env.RESOURCE_GROUP }}
