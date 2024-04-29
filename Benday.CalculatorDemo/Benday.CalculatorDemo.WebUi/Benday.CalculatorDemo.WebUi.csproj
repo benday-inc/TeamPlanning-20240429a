@@ -8,8 +8,8 @@
     <ProjectReference Include="..\Benday.CalculatorDemo.Api\Benday.CalculatorDemo.Api.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.2" />
-    <PackageReference Include="Selenium.Support" Version="4.8.0" />
-    <PackageReference Include="Selenium.WebDriver" Version="4.8.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
+    <PackageReference Include="Selenium.Support" Version="4.20.0" />
+    <PackageReference Include="Selenium.WebDriver" Version="4.20.0" />
   </ItemGroup>
 </Project>
