@@ -24,7 +24,7 @@ public class CalculatorController : Controller
     }
 
     [HttpPost]
-    public IActionResult Index(CalculatorViewModel model, string action)
+    public IActionResult Index(CalculatorViewModel model)
     {
         if (model == null)
         {
