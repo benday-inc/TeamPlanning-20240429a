@@ -38,6 +38,7 @@ jobs:
   deploy-to-test:
     runs-on: windows-latest
     needs: build
+    environment: test
     steps:
     - name: Download artifact from build job
       uses: actions/download-artifact@v3
@@ -53,6 +54,7 @@ jobs:
         slot-name: 'test'
   deploy-to-prod:
     runs-on: windows-latest
+    environment: prod
     needs: deploy-to-test
     steps:
     - name: Log into Azure CLI with service principal
