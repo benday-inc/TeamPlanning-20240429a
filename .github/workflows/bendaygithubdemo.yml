@@ -12,10 +12,12 @@ env:
   WEBAPP_WORKING_DIRECTORY: Benday.CalculatorDemo\Benday.CalculatorDemo.WebUi
   AZURE_WEBAPP_RESOURCE_GROUP: rg-github-demo
   AZURE_WEBAPP_SLOT_NAME: test
+  UNIT_TESTS_WORKING_DIRECTORY: Benday.CalculatorDemo\Benday.CalculatorDemo.UnitTests
 
 jobs:
   build:
-    runs-on: windows-latest
+    # runs-on: windows-latest
+    runs-on: self-hosted
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET SDK
@@ -32,6 +34,7 @@ jobs:
       run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
     - name: Test
       run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
+      working-directory: ${{ env.UNIT_TESTS_WORKING_DIRECTORY }}
     - name: Publish
       run: dotnet publish --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
       working-directory: ${{ env.WEBAPP_WORKING_DIRECTORY }}
@@ -41,7 +44,8 @@ jobs:
         name: webapp
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
   deploy-to-test:
-    runs-on: windows-latest
+    # runs-on: windows-latest
+    runs-on: self-hosted
     needs: build
     environment: test
     steps:
@@ -64,7 +68,8 @@ jobs:
     - name: set version info
       run: az webapp config appsettings set -n ${{ env.AZURE_WEBAPP_NAME }} -g ${{ env.AZURE_WEBAPP_RESOURCE_GROUP }} --settings "BuildVersionMessage=${{ github.run_number }}.deploy-to-test"
   deploy-to-prod:
-    runs-on: windows-latest
+    # runs-on: windows-latest
+    runs-on: self-hosted
     environment: prod
     needs: deploy-to-test
     steps:
