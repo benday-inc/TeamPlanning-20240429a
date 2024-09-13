@@ -20,8 +20,8 @@ jobs:
     uses: ./.github/workflows/build.yml
 
   deploy-to-test:
-    # runs-on: windows-latest
-    runs-on: self-hosted
+    runs-on: windows-latest
+    # runs-on: self-hosted
     needs: build
     environment: test
     steps:
